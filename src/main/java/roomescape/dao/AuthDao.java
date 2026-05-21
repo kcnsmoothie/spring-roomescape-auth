@@ -1,5 +1,7 @@
 package roomescape.dao;
 
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -21,6 +23,24 @@ public class AuthDao {
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    public Optional<User> findByEmail(String email) {
+        try {
+            User user = jdbcTemplate.queryForObject(
+                    "SELECT id, email, password, name FROM users WHERE email = ?",
+                    (rs, rowNum) -> new User(      // ← 람다 직접 작성
+                            rs.getLong("id"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getString("name")
+                    ),
+                    email
+            );
+            return Optional.ofNullable(user);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public boolean existsByEmail(String email) {
