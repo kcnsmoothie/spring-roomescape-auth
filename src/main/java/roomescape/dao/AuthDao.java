@@ -43,6 +43,24 @@ public class AuthDao {
         }
     }
 
+    public Optional<User> findById(Long id) {
+        try {
+            User user = jdbcTemplate.queryForObject(
+                    "SELECT id, email, password, name FROM users WHERE id = ?",
+                    (rs, rowNum) -> new User(
+                            rs.getLong("id"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getString("name")
+                    ),
+                    id
+            );
+            return Optional.ofNullable(user);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public boolean existsByEmail(String email) {
         Boolean result = jdbcTemplate.queryForObject("""
         SELECT EXISTS(
