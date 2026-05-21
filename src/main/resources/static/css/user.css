@@ -43,6 +43,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -56,6 +57,19 @@ body {
 .header-nav {
   display: flex;
   gap: 0.5rem;
+}
+
+.auth-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.auth-status__name {
+  color: var(--text);
+  font-weight: 600;
 }
 
 .nav-link {
@@ -91,6 +105,39 @@ body {
 
 .popular-section {
   margin-bottom: 3rem;
+}
+
+.auth-section {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.7fr) minmax(320px, 1.3fr);
+  gap: 1.25rem;
+  align-items: start;
+  margin-bottom: 3rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.auth-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #12151c;
+}
+
+.auth-form h3 {
+  margin: 0;
+  font-size: 1rem;
 }
 
 .popular-strip {
@@ -442,7 +489,7 @@ body {
 .my-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
@@ -514,8 +561,44 @@ body {
 .my-edit-panel {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 1.5rem;
+}
+
+.section-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 760px) {
+  .auth-section,
+  .auth-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header-inner,
+  .header-nav,
+  .auth-status,
+  .section-row,
+  .my-search-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .header-nav {
+    width: 100%;
+  }
+
+  .nav-link {
+    flex: 1;
+    text-align: center;
+  }
+
+  .calendar {
+    max-width: 100%;
+  }
 }
 
 .my-edit-title {
