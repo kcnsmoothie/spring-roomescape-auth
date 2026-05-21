@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.annotation.LoginMember;
+import roomescape.domain.User;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.request.UserReservationUpdateRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.service.ReservationService;
-
 
 @RestController
 @RequestMapping("/reservations")
@@ -35,30 +35,33 @@ public class ReservationController {
     }
 
     @GetMapping("/my-reservation")
-    public ResponseEntity<ReservationResponse> readReservation(
-            @RequestParam("name") String name
-    ) {
-        ReservationResponse response = reservationService.find(name);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<List<ReservationResponse>> readReservation(@LoginMember User user) {
+        List<ReservationResponse> responses = reservationService.findAllByUser(user);
+        return ResponseEntity.ok(responses);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> create(@Valid @RequestBody ReservationRequest request) {
-        ReservationResponse response = reservationService.save(request);
+    public ResponseEntity<ReservationResponse> create(
+            @LoginMember User user,
+            @Valid @RequestBody ReservationRequest request
+    ) {
+        ReservationResponse response = reservationService.save(request, user);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ReservationResponse> update(
             @PathVariable Long id,
-            @Valid @RequestBody UserReservationUpdateRequest request) {
-        ReservationResponse updated = reservationService.update(id, request);
+            @LoginMember User user,
+            @Valid @RequestBody UserReservationUpdateRequest request
+    ) {
+        ReservationResponse updated = reservationService.update(id, request, user);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservationService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id, @LoginMember User user) {
+        reservationService.delete(id, user);
         return ResponseEntity.noContent().build();
     }
 }
