@@ -9,6 +9,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<GlobalErrorResponse> handleAuthenticationException(AuthenticationException e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new GlobalErrorResponse(e.getMessage()));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<GlobalErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity
@@ -31,7 +38,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NameNotFoundException.class)
-    public ResponseEntity<GlobalErrorResponse> handleNameNotFoundException(IdNotFoundException e) {
+    public ResponseEntity<GlobalErrorResponse> handleNameNotFoundException(NameNotFoundException e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new GlobalErrorResponse(e.getMessage()));
