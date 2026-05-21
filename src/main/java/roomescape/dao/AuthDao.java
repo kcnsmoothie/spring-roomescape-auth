@@ -47,7 +47,7 @@ public class AuthDao {
         Boolean result = jdbcTemplate.queryForObject("""
         SELECT EXISTS(
             SELECT *
-            FROM user
+            FROM users
             WHERE email = ?
         )
         """,
@@ -58,18 +58,16 @@ public class AuthDao {
     }
 
     @Transactional
-    public User save(User user) {
+    public Long save(User user) {
         Map<String, Object> params = new HashMap<>();
         params.put("email", user.getEmail());
         params.put("password", user.getPassword());
-        params.put("nickname", user.getName());
-        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-
-        return new User(id, user.getEmail(), user.getPassword(), user.getName());
+        params.put("name", user.getName());
+        return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     @Transactional
     public void delete(Long id) {
-        jdbcTemplate.update("DELETE FROM user WHERE id = ?", id);
+        jdbcTemplate.update("DELETE FROM users WHERE id = ?", id);
     }
 }
